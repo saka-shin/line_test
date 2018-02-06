@@ -4,8 +4,11 @@ import (
 	"io"
 	"line_test/handler"
 
+	"github.com/gorilla/sessions"
+
 	"github.com/golang/go/src/pkg/html/template"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/middleware"
 )
 
@@ -19,19 +22,28 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 func main() {
 	e := echo.New()
+	e.Debug = true
 
-	// 全てのリクエストで差し込みたいミドルウェア（ログとか）はここ
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 
 	// テンプレート読み込み
 	e.Renderer = &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("template/*.html")),
 	}
 
+	g := e.Group("/line_test")
+
+	// 静的ファイル
+	g.Static("/css", "static/css")
+
 	// ルーティング
-	e.GET("/", handler.Index())
+	g.GET("/", handler.Index())
+	g.POST("/auth", handler.Auth())
+	g.POST("/token", handler.Token())
+	g.GET("/notify", handler.GetNotify())
 
 	// サーバー起動
-	e.Start(":1323") //ポート番号指定してね
+	e.Logger.Fatal(e.Start(":1323"))
 }

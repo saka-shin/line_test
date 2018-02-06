@@ -1,0 +1,33 @@
+{{define "cb1"}}
+{{template "head"}}
+<div class="container mt-2">
+<h1 class="display-4">LINE Notify テスト</h1>
+<table class="table-bordered">
+	<tr>
+		<th scope="row">CODE</th>
+		<td>{{.Code}}</td>
+	</tr>
+	<tr>
+		<th scope="row">STATE</th>
+		<td>{{.State}}</td>
+	</tr>
+	<tr>
+		<th scope="row">ERROR</th>
+		<td>{{.Error}}</td>
+	</tr>
+	<tr>
+		<th scope="row">ERROR_DESCRIPTION</th>
+		<td>{{.ErrorDescription}}</td>
+	</tr>	
+</table>
+{{if not .Error}}
+<form method="post" action="https://notify-bot.line.me/oauth/token">
+	<input type="hidden" name="grant_type" value="authorization_code">
+	<input type="hidden" name="code" value="{{.Code}}">
+	<input type="hidden" name="redirect_uri" value="authorization_code">
+	<input type="hidden" name="grant_type" value="authorization_code">
+	<input type="hidden" name="grant_type" value="authorization_code">
+</form>
+{{end}}
+{{template "foot"}}
+{{end}}

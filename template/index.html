@@ -1,6 +1,20 @@
 {{define "index"}}
 {{template "head"}}
-<h1>ラインテスト</h1>
-
+<div class="container mt-2">
+<h1 class="display-4">LINE Notify テスト</h1>
+<form method="post" action="/line_test/auth">
+	<div class="form-group">
+		<label>client-id</label>
+		<input type="text" class="form-control" name="client_id" value="">
+		<small class="form-text text-muted">本来はプログラムで指定する。LINE Notifyの管理画面で登録したサービスのClient IDをコピーする。</small>
+	</div>
+	<div class="form-group">
+		<label>client-secret</label>
+		<input type="text" class="form-control" name="client_secret" value="">
+		<small class="form-text text-muted">本来はプログラムで指定する。LINE Notifyの管理画面で登録したサービスのClient Secretをコピーする。</small>
+	</div>
+	<button type="submit" class="btn btn-primary">LINE連携</button>
+</form>
+</div>
 {{template "foot"}}
 {{end}}
