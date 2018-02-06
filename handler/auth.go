@@ -1,10 +1,9 @@
 package handler
 
 import (
+	"fmt"
 	"line_test/util"
 	"net/http"
-	"net/url"
-	"strings"
 
 	"github.com/labstack/echo"
 )
@@ -40,27 +39,7 @@ func Auth() echo.HandlerFunc {
 		}
 
 		// authorization endpoint
-		values := url.Values{}
-		values.Set("response_type", "code")
-		values.Set("client_id", authParam.ClientId)
-		values.Set("redirect_url", "https://sakashin.net/line_test/token")
-		values.Set("scope", "notify")
-		values.Set("state", "1234567890") // csrf対策。テストなので適当に。
-		values.Set("response_mode", "form_post")
-		req, err := http.NewRequest(
-			"GET",
-			"https://notify-bot.line.me/oauth/authorize",
-			strings.NewReader(values.Encode()),
-		)
-		if err != nil {
-			return err
-		}
-
-		client := &http.Client{}
-		if _, err := client.Do(req); err != nil {
-			return err
-		}
-
-		return nil
+		return c.Redirect(http.StatusMovedPermanently,
+			fmt.Sprintf("https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=%s&redirect_url=https://sakashin.net/line_test/token&scope=notify&state=1234567890&response_mode=form_post", authParam.ClientId))
 	}
 }
