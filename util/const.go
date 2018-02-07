@@ -1,3 +1,3 @@
 package util
 
-const BASE_URL = "http://localhost:1323"
+const BASE_URL = "https://sakashin.net/line_test/token"
