@@ -99,7 +99,8 @@ func Token() echo.HandlerFunc {
 
 		var file *os.File
 		pwd, _ := os.Getwd()
-		if file, err = os.Create(pwd + "/line_notify_token.txt"); err != nil {
+		// if file, err = os.Create(pwd + "/line_notify_token.txt"); err != nil {
+		if file, err = os.OpenFile(pwd+"/line_notify_token.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644); err != nil {
 			return err
 		}
 
