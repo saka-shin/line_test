@@ -4,5 +4,8 @@ files:
   - source: /
     destination: /home/ec2-user/go/src/line_test
 permissions:
-  - owner: ec2-user
+  - object: /home/ec2-user/go/src/line_test
+    owner: ec2-user
     group: ec2-user
+    type:
+      - directory
