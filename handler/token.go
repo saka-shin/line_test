@@ -15,10 +15,14 @@ import (
 )
 
 type AuthResponse struct {
-	Code             string `form:"code"`
-	State            string `form:"state"`
-	Error            string `form:"error"`
-	ErrorDescription string `form:"error_description"`
+	Code             string `form:"code" query:"code"`
+	State            string `form:"state" query:"state"`
+	Error            string `form:"error" query:"error"`
+	ErrorDescription string `form:"error_description" query:"error_description"`
+}
+
+func (resp *AuthResponse) String() string {
+	return fmt.Sprintf("code=%s, state=%s, error=%s, error description=%s", resp.Code, resp.State, resp.Error, resp.ErrorDescription)
 }
 
 type TokenResp struct {
@@ -43,17 +47,20 @@ func Token() echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
+		c.Echo().Logger.Debug("client id=" + clientId)
 
 		clientSecret, err := util.GetSession(c, "client_secret")
 		if err != nil {
 			return err
 		}
+		c.Echo().Logger.Debug("client secret=" + clientSecret)
+		c.Echo().Logger.Debug("code=" + authResp.Code)
 
 		// token endpoint
 		values := url.Values{}
 		values.Set("grant_type", "authorization_code")
 		values.Set("code", authResp.Code)
-		values.Set("redirect_url", "https://sakashin.net/line_test/token")
+		values.Set("redirect_uri", util.BASE_URL+"/line_test/token")
 		values.Set("client_id", clientId)
 		values.Set("client_secret", clientSecret)
 		req, err := http.NewRequest(
@@ -65,6 +72,7 @@ func Token() echo.HandlerFunc {
 			return err
 		}
 
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
@@ -75,7 +83,11 @@ func Token() echo.HandlerFunc {
 		b, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
+		} else if resp.StatusCode == 400 {
+			return errors.New(string(b))
 		}
+
+		c.Echo().Logger.Debug("resp body=" + string(b))
 
 		var tokenResponse = new(TokenResp)
 		err = json.Unmarshal(b, tokenResponse)
@@ -86,7 +98,8 @@ func Token() echo.HandlerFunc {
 		c.Echo().Logger.Debug(fmt.Sprintf("access token [%s]", tokenResponse.AccessToken))
 
 		var file *os.File
-		if file, err = os.Create("~/lien_notify_token.txt"); err != nil {
+		pwd, _ := os.Getwd()
+		if file, err = os.Create(pwd + "/line_notify_token.txt"); err != nil {
 			return err
 		}
 

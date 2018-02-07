@@ -21,6 +21,7 @@ func getSessionObject(c echo.Context) (*sessions.Session, error) {
 
 	if !inited {
 		c.Echo().Logger.Debug("initialize session")
+		inited = true
 		sess.Options = &sessions.Options{
 			Path:     "/",
 			MaxAge:   86400 * 7,

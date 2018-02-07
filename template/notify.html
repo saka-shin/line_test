@@ -9,12 +9,14 @@
 	</div>
 	<div class="form-group">
 		<label>通知先</label>
-		{{range .}}
-		<input type="checkbox" class="form-check-input" name="token" value="{{.}}">
-		<label class="form-check-label">{{.}}</label>
-		{{else}}
-		通知先がありません。まずは<a href="/line_test/">こちら</a>から通知認証してください。
-		{{end}}
+		<div class="form-check">
+			{{range .}}
+			<input type="checkbox" class="form-check-input" name="tokens[]" value="{{.}}">
+			<label class="form-check-label">{{.}}</label>
+			{{else}}
+			通知先がありません。まずは<a href="/line_test/">こちら</a>から通知認証してください。
+			{{end}}
+		</div>
 	</div>
 	<button type="submit" class="btn btn-primary">LINEに通知</button>
 </form>

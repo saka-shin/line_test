@@ -41,8 +41,9 @@ func main() {
 	// ルーティング
 	g.GET("/", handler.Index())
 	g.POST("/auth", handler.Auth())
-	g.POST("/token", handler.Token())
+	g.GET("/token", handler.Token())
 	g.GET("/notify", handler.GetNotify())
+	g.POST("/notify", handler.PostNotify())
 
 	// サーバー起動
 	e.Logger.Fatal(e.Start(":1323"))
