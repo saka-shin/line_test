@@ -1,3 +1,3 @@
 package util
 
-const BASE_URL = "https://sakashin.net"
+const BASE_URL = "http://localhost:1323"

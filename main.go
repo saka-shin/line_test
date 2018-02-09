@@ -45,6 +45,14 @@ func main() {
 	g.GET("/notify", handler.GetNotify())
 	g.POST("/notify", handler.PostNotify())
 
+	g = e.Group("/line_login")
+	g.GET("/", handler.LoginIndex())
+	g.GET("/callback", handler.LoginCallback())
+
+	g = e.Group("/line_message")
+	g.GET("/", handler.GetMessage())
+	g.POST("/", handler.PostMessage())
+
 	// サーバー起動
 	e.Logger.Fatal(e.Start(":1323"))
 }

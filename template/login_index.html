@@ -1,0 +1,16 @@
+{{define "login_index"}}
+{{template "head"}}
+<div class="container mt-2">
+<h1 class="display-4">LINE Login テスト</h1>
+<form method="get" action="https://access.line.me/oauth2/v2.1/authorize">
+	<input type="hidden" name="response_type" value="code">
+	<input type="hidden" name="client_id" value="{{.Id}}">
+	<input type="hidden" name="redirect_uri" value="{{.BaseURL}}/line_login/callback">
+	<input type="hidden" name="state" value="1234567890">
+	<input type="hidden" name="scope" value="profile openid">
+	<input type="hidden" name="bot_prompt" value="aggressive">
+	<button type="submit" class="btn btn-primary">LINEでログイン</button>
+</form>
+</div>
+{{template "foot"}}
+{{end}}
